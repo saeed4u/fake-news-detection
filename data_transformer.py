@@ -85,5 +85,21 @@ def clean_data(path='datasets/train.csv', vector_dimensions=300):
     data = data.drop(missing_rows).reset_index().drop(['index', 'id'], axis=1)
     data = data.sample(frac=1).reset_index(drop=True)
 
+    text = data.loc[:, 'text'].values
+    label = data.loc[:, 'label'].values
+
+    train_size = int(0.8 * len(text))
+
+    text_train = text[:train_size]
+    text_test = text[train_size:]
+
+    label_train = label[:train_size]
+    label_test = label[train_size:]
+
+    np.save('text_train.npy', text_train)
+    np.save('text_test.npy', text_test)
+    np.save('label_train.npy', label_train)
+    np.save('label_test.npy', label_test)
+
 
 clean_data()
