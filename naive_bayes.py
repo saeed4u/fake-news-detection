@@ -1,4 +1,4 @@
-from data_transformer import getEmbeddings
+from data_transformer import get_embeddings
 from sklearn.naive_bayes import GaussianNB
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,7 +11,7 @@ def plot_cmat(yte, ypred):
     plt.show()
 
 
-xtr, xte, ytr, yte = getEmbeddings("datasets/train.csv")
+xtr, xte, ytr, yte = get_embeddings("datasets/train.csv")
 np.save('./xtr', xtr)
 np.save('./xte', xte)
 np.save('./ytr', ytr)

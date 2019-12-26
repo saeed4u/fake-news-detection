@@ -8,7 +8,7 @@ from gensim import utils
 from nltk.corpus import stopwords
 
 
-def textClean(text):
+def text_clean(text):
     text = re.sub(r"[^A-Za-z0-9^,!.\/'+-=]", " ", text)
     text = text.lower().split()
     stops = set(stopwords.words("english"))
@@ -18,19 +18,19 @@ def textClean(text):
 
 
 def cleanup(text):
-    text = textClean(text)
+    text = text_clean(text)
     text = text.translate(str.maketrans("", "", string.punctuation))
     return text
 
 
-def constructLabeledSentences(data):
+def construct_labeled_sentences(data):
     sentences = []
     for index, row in data.iteritems():
         sentences.append(LabeledSentence(utils.to_unicode(row).split(), ['Text' + '_%s' % str(index)]))
     return sentences
 
 
-def getEmbeddings(path, vector_dimension=300):
+def get_embeddings(path, vector_dimension=300):
     data = pd.read_csv(path)
 
     missing_rows = []
@@ -42,7 +42,7 @@ def getEmbeddings(path, vector_dimension=300):
     for i in range(len(data)):
         data.loc[i, 'text'] = cleanup(data.loc[i, 'text'])
 
-    x = constructLabeledSentences(data['text'])
+    x = construct_labeled_sentences(data['text'])
     y = data['label'].values
 
     text_model = Doc2Vec(min_count=1, window=5, vector_size=vector_dimension, sample=1e-4, negative=5, workers=7,
@@ -70,3 +70,20 @@ def getEmbeddings(path, vector_dimension=300):
         j = j + 1
 
     return text_train_arrays, text_test_arrays, train_labels, test_labels
+
+
+def clean_data(path='datasets/train.csv', vector_dimensions=300):
+    print(path)
+    data = pd.read_csv(path)
+    missing_rows = []
+    for index in range(len(data)):
+        if data.loc[index, 'text'] != data.loc[index, 'text']:
+            missing_rows.append(index)
+        else:
+            data.loc[index, 'text'] = cleanup(data.loc[index, 'text'])
+
+    data = data.drop(missing_rows).reset_index().drop(['index', 'id'], axis=1)
+    data = data.sample(frac=1).reset_index(drop=True)
+
+
+clean_data()
