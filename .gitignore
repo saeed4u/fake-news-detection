@@ -1,0 +1,4 @@
+*.npy
+venv
+.idea
+__pycache__
