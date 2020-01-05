@@ -11,7 +11,7 @@ from collections import Counter
 data_transformer.clean_data()
 
 text_train = np.load('./text_train.npy')
-text_text = np.load('./text_test.npy')
+text_test = np.load('./text_test.npy')
 
 label_train = np.load('./label_train.npy')
 label_text = np.load('./label_text.npy')
@@ -33,7 +33,9 @@ for (word, _) in most_common:
     word_bank[word] = id_num
     id_num += 1
 
-for news in text_train:
+
+def encode():
+    global i
     i = 0
     while i < len(news):
         if news[i] in word_bank:
@@ -42,6 +44,26 @@ for news in text_train:
         else:
             del news[i]
 
-text_train = list(text_train)
-label_train = list(label_train)
 
+for news in text_train:
+    encode()
+i = 0
+
+while i < len(text_train):
+    if len(text_train) > 10:
+        i += 1
+    else:
+        del text_train[i]
+        del label_train[i]
+
+text_test_ = []
+for text in text_test:
+    text_test_.append(text.split())
+
+for news in text_test_:
+    encode()
+
+
+
+label_train = list(label_train)
+label_text = list(label_text)
